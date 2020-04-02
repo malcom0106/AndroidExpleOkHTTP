@@ -32,19 +32,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class AsyncCallWS extends AsyncTask<String, Integer,String>{
-
-
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
-
         @Override
         protected String doInBackground(String... strings) {
-            return callServiceWeb();
+            return callMeteo();
         }
-
         @Override
         protected void onPostExecute(String retourSW) {
             super.onPostExecute(retourSW);
@@ -52,9 +47,36 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private String callMeteo(){
+        //String a retourner
+        String retourSW = "";
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("https://community-open-weather-map.p.rapidapi.com/weather?callback=test&id=2172797&units=%2522metric%2522%20or%20%2522imperial%2522&mode=xml%252C%20html&q=London%252Cuk")
+                .get()
+                .addHeader("x-rapidapi-host", "community-open-weather-map.p.rapidapi.com")
+                .addHeader("x-rapidapi-key", "0326288ba9msh21286c3615c5e04p1021aejsn8d95c1cbc636")
+                .build();
+        try{
+            Response response = client.newCall(request).execute();
+            if(response.isSuccessful()){
+                retourSW =  response.body().string();
+            }
+        }
+        catch (Exception ex){
+
+            retourSW= ex.getMessage();
+        }
+        Log.e("retourWS",retourSW);
+        return retourSW;
+
+    }
+
     private String callServiceWeb(){
         //On saisir l'url
-        String url = "http://claudehenri.fr/serviceweb/bonjour";
+        String url = "http://claudehenry.fr/serviceweb/bonjour";
 
         //String a retourner
         String retourSW = "";
